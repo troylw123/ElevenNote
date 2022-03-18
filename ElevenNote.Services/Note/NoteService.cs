@@ -92,5 +92,14 @@ namespace ElevenNote.Services.Note
             // numberOfChanges should be 1 because only 1 row is updated
             return numberOfChanges == 1;
         }
+        public async Task<bool> DeleteNoteAsync(int noteId)
+        {
+            var noteEntity = await _dbContext.Notes.FindAsync(noteId);
+            if (noteEntity?.OwnerId != _userId)
+            return false;
+
+            _dbContext.Notes.Remove(noteEntity);
+            return await _dbContext.SaveChangesAsync() == 1;
+        }
     }
 }
